@@ -1,0 +1,146 @@
+class UI {
+  static int topOffset, marginBackgroundTop, marginBackgroundLeft;
+
+  function void showGameScreen() {
+	var int i, j;
+
+	let marginBackgroundTop  = 4;
+	let marginBackgroundLeft = 8;
+	let topOffset = 48;
+
+	do Screen.drawRectangle(0, topOffset, 511, 255);
+
+	let i = 1;
+	while (i < 11) {
+	  let j = 1;
+	  while (j < 17) {
+		do UI.drawBackgroundPattern(i, j);
+		let j = j + 1;
+	  }
+	  let i = i + 1;
+	}
+
+	return;
+  }
+
+  function void drawBackgroundPattern(int line, int column) {
+	var int memAddress, location;
+	let location = ((line + marginBackgroundTop - 1) * 512) + (column + marginBackgroundLeft - 1);
+	let memAddress = 16384 + location;
+
+	let memAddress = 16384+location;
+	do Memory.poke(memAddress + 0, 0);
+	do Memory.poke(memAddress + 32, 0);
+	do Memory.poke(memAddress + 64, 0);
+	do Memory.poke(memAddress + 96, 0);
+	do Memory.poke(memAddress + 128, 0);
+	do Memory.poke(memAddress + 160, 0);
+	do Memory.poke(memAddress + 192, 0);
+	do Memory.poke(memAddress + 224, 0);
+	do Memory.poke(memAddress + 256, 0);
+	do Memory.poke(memAddress + 288, 0);
+	do Memory.poke(memAddress + 320, 0);
+	do Memory.poke(memAddress + 352, 0);
+	do Memory.poke(memAddress + 384, 0);
+	do Memory.poke(memAddress + 416, 0);
+	do Memory.poke(memAddress + 448, 0);
+	do Memory.poke(memAddress + 480, 0);
+	return;
+
+  }
+
+  function void drawSnakePattern(int line, int column) {
+	var int memAddress, location;
+	let location = ((line + marginBackgroundTop - 1) * 512) + (column + marginBackgroundLeft - 1);
+	let memAddress = 16384 + location;
+	do Memory.poke(memAddress + 0, 2244);
+	do Memory.poke(memAddress + 32, 5418);
+	do Memory.poke(memAddress + 64, 8721);
+	do Memory.poke(memAddress + 96, 25105);
+	do Memory.poke(memAddress + 128, -27350);
+	do Memory.poke(memAddress + 160, -30524);
+	do Memory.poke(memAddress + 192, -30522);
+	do Memory.poke(memAddress + 224, 21801);
+	do Memory.poke(memAddress + 256, 8720);
+	do Memory.poke(memAddress + 288, 8753);
+	do Memory.poke(memAddress + 320, 21802);
+	do Memory.poke(memAddress + 352, -30524);
+	do Memory.poke(memAddress + 384, -30654);
+	do Memory.poke(memAddress + 416, 21666);
+	do Memory.poke(memAddress + 448, 8980);
+	do Memory.poke(memAddress + 480, 4376);
+
+
+	/* do Memory.poke(memAddress + 0, -13108); */
+	/* do Memory.poke(memAddress + 32, -13108); */
+	/* do Memory.poke(memAddress + 64, 13107); */
+	/* do Memory.poke(memAddress + 96, 13107); */
+	/* do Memory.poke(memAddress + 128, -13108); */
+	/* do Memory.poke(memAddress + 160, -13108); */
+	/* do Memory.poke(memAddress + 192, 13107); */
+	/* do Memory.poke(memAddress + 224, 13107); */
+	/* do Memory.poke(memAddress + 256, -13108); */
+	/* do Memory.poke(memAddress + 288, -13108); */
+	/* do Memory.poke(memAddress + 320, 13107); */
+	/* do Memory.poke(memAddress + 352, 13107); */
+	/* do Memory.poke(memAddress + 384, -13108); */
+	/* do Memory.poke(memAddress + 416, -13108); */
+	/* do Memory.poke(memAddress + 448, 13107); */
+	/* do Memory.poke(memAddress + 480, 13107); */
+	return;
+  }
+
+  function void drawApplePattern (int line, int column) {
+	var int memAddress, location;
+	let location = ((line + marginBackgroundTop - 1) * 512) + (column + marginBackgroundLeft - 1);
+	let memAddress = 16384 + location;
+
+	do Memory.poke(memAddress + 0, 112);
+	do Memory.poke(memAddress + 32, 7648);
+	do Memory.poke(memAddress + 64, 1536);
+	do Memory.poke(memAddress + 96, 992);
+	do Memory.poke(memAddress + 128, 3824);
+	do Memory.poke(memAddress + 160, 8152);
+	do Memory.poke(memAddress + 192, 16364);
+	do Memory.poke(memAddress + 224, 16332);
+	do Memory.poke(memAddress + 256, 16268);
+	do Memory.poke(memAddress + 288, 16216);
+	do Memory.poke(memAddress + 320, 16376);
+	do Memory.poke(memAddress + 352, 7152);
+	do Memory.poke(memAddress + 384, 4032);
+	do Memory.poke(memAddress + 416, 0);
+	do Memory.poke(memAddress + 448, 0);
+	do Memory.poke(memAddress + 480, 0);
+	return;
+  }
+
+  function void printPoints(int points) {
+	do UI.clearLine(0);
+	do Output.moveCursor(0, 0);
+	do Output.printString("POINTS: ");
+	do Output.printInt(points);
+	return;
+  }
+
+  function void printEndMessage(String msg) {
+	do UI.clearLine(1);
+	do Output.moveCursor(1, 0);
+	do Output.printString(msg);
+	do UI.clearLine(2);
+   	do Output.moveCursor(2, 0);
+	do Output.printString("GAME OVER.");
+	return;
+  }
+
+  function void clearLine(int line) {
+	var int i, space;
+	let i = 0;
+	let space = 32;
+	do Output.moveCursor(line, 0);
+	while (i < 64) {
+	  do Output.printChar(space);
+	  let i = i + 1;
+	}
+	return;
+  }
+}

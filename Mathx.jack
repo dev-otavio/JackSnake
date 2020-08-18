@@ -1,0 +1,57 @@
+class Mathx {
+  static int mSeed;
+
+  function void incrementSeed(int v) {
+	if (mSeed > 32760) {
+	  let mSeed = 0;
+	}
+	if ((mSeed + v) > 32760) {
+	  let mSeed = mSeed + 1;
+	}
+	else {
+	  let mSeed = mSeed + v;
+	}
+	return;
+  }
+
+  function int getRandom(int seed, int range) {
+	var int i, v;
+	let i = 16385;
+	while (i < 24576) {
+	  let v = Memory.peek(i);
+	  if (v) {
+		do Mathx.incrementSeed(v + seed);
+		return Mathx.abs(Mathx.mod(mSeed, range));
+	  }
+	  let i = i + 1;
+	}
+	do Mathx.incrementSeed(seed);
+	return Mathx.abs(Mathx.mod(mSeed, range));
+  }
+
+  function int abs(int x) {
+	if (x < 0) {
+	  return -x;
+	}
+	return x;
+  }
+
+  function int mod(int x, int y) {
+	var int px, py, d, r;
+	let px = Mathx.abs(x);
+	let py = Mathx.abs(y);
+
+	if (px < py) {
+	  return x;
+	}
+
+	let d = px / py;
+	let r = px - (d * py);
+
+	if (x < 0) {
+	  let r = -r;
+	}
+
+	return r;
+  }
+}

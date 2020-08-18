@@ -1,0 +1,244 @@
+class SnakePart {
+  field SnakePart head, tail;
+  field int line, tailLength, column, verticalV, horizontalV, appleLine, appleColumn;
+
+  constructor SnakePart new(SnakePart h) {
+	let head = h;
+	return this;
+  }
+
+  function SnakePart makeSnakeHead() {
+	var SnakePart s;
+	let s = SnakePart.new(null);
+	do s.setLine(1);
+	do s.setColumn(1);
+	do s.setVerticalV(1);
+	do s.setHorizontalV(0);
+	do s.show();
+	return s;
+  }
+
+  method void grow(int l, int c) {
+	var SnakePart newPart;
+
+	// it will be the 'neck' and it will assume
+	// head's previous position passed as arguments `l` and`c`.
+	let newPart = SnakePart.new(this);
+	do newPart.setLine(l);
+	do newPart.setColumn(c);
+
+	if (tail) {
+	  do newPart.setTail(tail);
+	}
+
+	let tail = newPart;
+	let tailLength = tailLength + 1;
+
+	/* if (tail = null) { */
+	/*   if (head = null) { */
+	/* 	let newPart = SnakePart.new(this); */
+	/*   } else { */
+	/* 	let newPart = SnakePart.new(head); */
+	/*   } */
+	/*   let tail = newPart; */
+	/*   do newPart.setLine(l); */
+	/*   do newPart.setColumn(c); */
+
+	/* } else { */
+	/*   do tail.grow(line, */
+	/* 			   column); */
+	/* } */
+
+	return;
+  }
+
+  method int getTailLength() {
+	return tailLength;
+  }
+
+  method void move() {
+
+	var int pLine, pColumn;
+
+	let pLine = line;
+	let pColumn = column;
+
+	// if it has a tail, the current position would be have to be repainted by
+	// the next segment so just don't erase it.
+	if (tail = null) {
+	  do erase();
+	}
+
+	let line = pLine + verticalV;
+	let column = pColumn + horizontalV;
+
+	// check if has escaped
+	if ((line < 1) | (line > Main.getLines()) | (column < 1) | (column > Main.getColumns())) {
+	  do Main.reportSnakeEscape();
+	}
+
+	// check has eaten
+	if ((appleLine = line) & (appleColumn = column)) {
+	  do grow(pLine, pColumn);
+	  do Main.throwAnApple();
+	} else {
+	  // the snake length increase around the 'neck' so just move tail if
+	  // the it has not grown.
+	  if (~(tail = null)) {
+		do tail.moveTo(pLine, pColumn);
+	  }
+	}
+
+	do show();
+
+	// make sure apple is repainted.
+	// if apple is at tail part it will be erased from the screen
+	do Main.showApple();
+
+	return;
+  }
+
+  method void moveTo(int l, int c) {
+	var int pLine, pColumn;
+
+	let pLine = line;
+	let pColumn = column;
+
+	// if it has a tail, the position that would be erased now would be repainted
+	// by the next segment, so just erase if it is the last segment.
+	if (tail = null) {
+	  do erase();
+	}
+
+	let line = l;
+	let column = c;
+
+	// check if has bitten itself
+	if ((head.getLine() = line) & ((head.getColumn()) = column)) {
+	  do Main.reportSnakeInjury();
+	}
+
+	if (~(tail = null)) {
+	  do tail.moveTo(pLine, pColumn);
+	}
+
+	return;
+  }
+
+  method void erase() {
+	do UI.drawBackgroundPattern(line, column);
+	return;
+  }
+
+  method void show() {
+	do UI.drawSnakePattern(line, column);
+	return;
+  }
+
+  method void setTail(SnakePart s) {
+  	let tail = s;
+  	return;
+  }
+
+  method void setLine(int l) {
+	let line = l;
+	return;
+  }
+
+  method int getLine() { return line; }
+
+  method void setColumn(int c) {
+	let column = c;
+	return;
+  }
+
+  method int getColumn() { return column; }
+
+  method void setVerticalV(int vv) {
+	let verticalV = vv;
+	return;
+  }
+
+  method void setHorizontalV(int hv) {
+	let horizontalV = hv;
+	return;
+  }
+
+  method void turnUp() {
+	if (~verticalV) {
+	  let horizontalV = 0;
+	  let verticalV = -1;
+	}
+	return;
+  }
+
+  method void turnDown() {
+	if (~verticalV) {
+	  let horizontalV = 0;
+	  let verticalV = 1;
+	}
+	return;
+  }
+
+  method void turnLeft() {
+	if (~horizontalV) {
+	  let horizontalV = -1;
+	  let verticalV = 0;
+	}
+	return;
+  }
+
+  method void turnRight() {
+	if (~horizontalV) {
+	  let horizontalV = 1;
+	  let verticalV = 0;
+	}
+	return;
+  }
+
+  method void setApplePosition(int aLine, int aColumn) {
+	let appleLine = aLine;
+	let appleColumn = aColumn;
+	return;
+  }
+
+  method void dispose() {
+	do Memory.dealloc(this);
+	return;
+  }
+
+  method int getVerticalV() { return verticalV; }
+  method int getHorizontalV() { return horizontalV; }
+
+  method void inspect() {
+  	do print();
+  	do Output.printString("[line=");
+  	do Output.printInt(line);
+  	do Output.printString(", column=");
+  	do Output.printInt(column);
+  	if (~(head = null)) {
+  	  do Output.printString(", head=");
+  	  do head.print();
+  	}
+  	if (~(tail = null)) {
+  	  do Output.printString(", tail=");
+  	  do tail.print();
+  	}
+  	do Output.printString("]");
+  	return;
+  }
+
+  method void print() {
+  	do Output.printString("SnakePart@");
+  	do Output.printInt(this);
+  	return;
+  }
+
+  method SnakePart getTail() {
+  	return tail;
+  }
+
+  method SnakePart getHead() {
+  	return head;
+  }
+}

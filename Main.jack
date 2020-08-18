@@ -1,0 +1,105 @@
+class Main {
+  static int seed, lines, columns, duration, appleLine, appleColumn;
+  static SnakePart snake;
+
+  function void main() {
+	var char c;
+
+  	let duration = 200;
+  	let lines = 10;
+  	let columns = 16;
+
+  	do UI.showGameScreen();
+
+	let snake = SnakePart.makeSnakeHead();
+
+  	do Main.throwAnApple();
+
+	while (true) {
+	  let c = Keyboard.keyPressed();
+	  if (c = 140) {
+		do Sys.halt();
+		do Main.incrementSeed();
+	  }
+  	  if (c = 130) {
+		do snake.turnLeft();
+		do Main.incrementSeed();
+	  }
+  	  if (c = 131) {
+		do snake.turnUp();
+		do Main.incrementSeed();
+	  }
+  	  if (c = 132) {
+		do snake.turnRight();
+		do Main.incrementSeed();
+	  }
+  	  if (c = 133) {
+		do snake.turnDown();
+		do Main.incrementSeed();
+	  }
+
+	  do snake.move();
+	  do Sys.wait(duration);
+	  do Main.incrementSeed();
+
+	}
+
+	return;
+  }
+  function int getLines() {
+  	return lines;
+  }
+
+  function int getColumns() {
+  	return columns;
+  }
+
+  function void incrementSeed() {
+  	if (seed > 32760) {
+  	  let seed = 0;
+  	} else {
+  	  let seed = seed + 1;
+  	}
+  	return;
+  }
+
+  function void showApple() {
+  	do UI.drawApplePattern(appleLine, appleColumn);
+  	return;
+  }
+
+  function void showPoints() {
+	do UI.printPoints(snake.getTailLength() * 10);
+  	return;
+  }
+
+  function void throwAnApple() {
+  	let appleLine = Mathx.getRandom(seed, lines) + 1;
+  	let appleColumn = Mathx.getRandom(seed, columns) + 1;
+
+  	do snake.setApplePosition(appleLine, appleColumn);
+  	do Main.showPoints();
+  	do Main.showApple();
+  	return;
+  }
+
+  function void reportSnakeInjury() {
+  	do UI.printEndMessage("Snake has bitten itself.");
+  	do Sys.halt();
+  	return;
+  }
+
+  function void reportSnakeEscape() {
+  	do UI.printEndMessage("Snake is out of bounds.");
+  	do Sys.halt();
+  	return;
+  }
+
+  function void showDebugInfo() {
+  	do UI.clearLine(22);
+  	do Output.moveCursor(22, 0);
+  	do snake.inspect();
+  	return;
+  }
+
+}
